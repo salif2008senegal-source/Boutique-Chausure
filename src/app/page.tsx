@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import VitrineClient from "@/src/components/VitrineClient";
 import { supabase } from "@/src/lib/supabase";
 import { lireBoutique } from "@/src/lib/boutique";
 import type { Produit } from "@/src/types/produit";
 
-
-export const revalidate = 0; // Pour que la page se mette à jour immédiatement après une modif
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   const boutique = await lireBoutique();
@@ -28,19 +28,37 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PageAccueil() {
-  const [reponseProduits, boutique] = await Promise.all([
-    supabase
-      .from("produits")
-      .select("id, nom_produit, prix_cfa, url_photo")
-      .order("cree_le", { ascending: false }),
-    lireBoutique(),
-  ]);
+  const boutique = await lireBoutique();
 
-  if (reponseProduits.error) {
-    console.error("Erreur Supabase :", reponseProduits.error.message);
+  // Pas de redirection : juste un lien. Aucune boucle possible.
+  if (!boutique) {
+    return (
+      <main className="flex min-h-screen items-center justify-center p-6">
+        <div className="max-w-sm text-center">
+          <p className="font-titre text-2xl font-semibold text-encre">
+            Cette boutique n&apos;est pas encore configurée.
+          </p>
+          <Link
+            href="/ajouter"
+            className="mt-5 inline-block rounded-xl bg-encre px-5 py-3 font-corps font-semibold text-fond"
+          >
+            Configurer ma boutique
+          </Link>
+        </div>
+      </main>
+    );
   }
 
-  const produits: Produit[] = reponseProduits.data ?? [];
+  const { data, error } = await supabase
+    .from("produits")
+    .select("id, nom_produit, prix_cfa, url_photo")
+    .order("cree_le", { ascending: false });
+
+  if (error) {
+    console.error("Erreur Supabase :", error.message);
+  }
+
+  const produits: Produit[] = data ?? [];
 
   return <VitrineClient produits={produits} boutique={boutique} />;
 }

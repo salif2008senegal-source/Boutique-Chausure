@@ -47,7 +47,7 @@ export default function VitrineClient({ produits, boutique }: ProprietesVitrine)
             {nomBoutique.charAt(0).toUpperCase()}
           </div>
         )}
-              <span className="font-titre text-xl font-semibold text-accent">{nomBoutique}</span>
+        <span className="font-titre text-lg text-encre">{nomBoutique}</span>
       </header>
 
       <section className="relative mx-auto max-w-4xl overflow-hidden px-4 pb-8 pt-10 sm:pt-16">
