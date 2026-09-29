@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-fond: #EDE7DA;
+  --color-encre: #2B241D;
+  --color-surface: #F7F4EC;
+  --color-accent: #C97C1F;
+  --color-accent-secondaire: #2B3A55;
+}
+
+@theme inline {
+  --font-titre: var(--font-fraunces), serif;
+  --font-corps: var(--font-work-sans), sans-serif;
+}
+
+body {
+  background-color: var(--color-fond);
+  color: var(--color-encre);
+  font-family: var(--font-corps);
+}
+
+@keyframes vol-chaussure {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-8deg); }
+  50% { transform: translate3d(14px, -28px, 0) rotate(10deg); }
+}
+
+.animation-vol {
+  animation: vol-chaussure 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animation-vol {
+    animation: none;
+  }
+}
